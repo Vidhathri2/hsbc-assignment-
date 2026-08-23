@@ -1,4 +1,4 @@
-from typing import List, TypedDict, Dict, Any
+from typing import List, TypedDict, Dict, Any, Literal
 from langgraph.graph import StateGraph, END
 from src.schema import Sample
 from src.agents.annotator import AnnotatorAgent
@@ -8,7 +8,7 @@ from src.logger import get_logger
 
 logger = get_logger("Coordinator")
 
-# Define the state for LangGraph
+# Define the state for the Hierarchical LangGraph
 class PipelineState(TypedDict):
     unlabelled_pool: List[Sample]
     labelled_pool: List[Sample]
@@ -17,6 +17,8 @@ class PipelineState(TypedDict):
     target_reached: bool
     batch_size: int
     max_iterations: int
+    next_agent: str
+    qa_attempts: int
 
 class Coordinator:
     def __init__(self, 
@@ -38,14 +40,45 @@ class Coordinator:
     def _build_graph(self) -> StateGraph:
         workflow = StateGraph(PipelineState)
         
-        # Define Nodes
+        # ---------------------------------------------------------
+        # THE SUPERVISOR NODE (Hierarchy Leader)
+        # ---------------------------------------------------------
+        def supervisor_node(state: PipelineState) -> Dict:
+            """The hierarchical supervisor that delegates tasks to sub-agents."""
+            # 1. Check exit conditions
+            if state["target_reached"]:
+                logger.info("Supervisor: Target accuracy reached. Terminating pipeline.")
+                return {"next_agent": "END"}
+            if state["iteration"] >= state["max_iterations"] or not state["unlabelled_pool"]:
+                logger.info("Supervisor: Max iterations reached or pool exhausted.")
+                return {"next_agent": "END"}
+                
+            # 2. Delegate to Selection Agent (if we have no active batch)
+            if not state["current_batch"]:
+                return {"next_agent": "select_data", "iteration": state["iteration"] + 1, "qa_attempts": 0}
+                
+            # 3. Delegate to Annotator Agent (if batch is unlabelled)
+            if any(s.label is None for s in state["current_batch"]):
+                return {"next_agent": "annotate"}
+                
+            # 4. Delegate to QA Agent (if batch hasn't passed QA)
+            # QA assesses confidence. If attempts < 3, keep trying.
+            if state["qa_attempts"] < 3 and any(not s.is_assessed for s in state["current_batch"]):
+                return {"next_agent": "qa"}
+                
+            # 5. Delegate to Trainer Agent (all QA passed or max QA attempts reached)
+            return {"next_agent": "train"}
+
+        # ---------------------------------------------------------
+        # THE WORKER NODES (Sub-Agents)
+        # ---------------------------------------------------------
         def select_data_node(state: PipelineState) -> Dict:
-            logger.info(f"--- LangGraph Iteration {state['iteration'] + 1} ---")
+            logger.info(f"--- Hierarchical Iteration {state['iteration']} ---")
+            logger.info("Supervisor -> Selection Agent: Fetching next optimal batch.")
             candidate_pool = state['unlabelled_pool']
             
-            # Active Learning
+            # Active Learning Entropy
             if self.trainer.best_model:
-                logger.info("Calculating prediction entropy to find most uncertain samples...")
                 entropies = self.trainer.get_uncertainties(state['unlabelled_pool'])
                 paired = sorted(zip(entropies, state['unlabelled_pool']), key=lambda x: x[0], reverse=True)
                 candidate_pool = [s for e, s in paired][:state['batch_size'] * 3]
@@ -56,53 +89,61 @@ class Coordinator:
                 batch_size=state['batch_size']
             )
             
-            # Remove from unlabelled
+            # Remove from unlabelled pool
             unlabelled = [s for s in state['unlabelled_pool'] if s not in selected_samples]
             return {"unlabelled_pool": unlabelled, "current_batch": selected_samples}
 
         def annotate_node(state: PipelineState) -> Dict:
+            logger.info("Supervisor -> Annotator Agent: Labelling batch.")
             annotated_batch = self.annotator.annotate(state['current_batch'])
             return {"current_batch": annotated_batch}
 
         def qa_node(state: PipelineState) -> Dict:
+            logger.info(f"Supervisor -> QA Agent: Reviewing batch (Attempt {state['qa_attempts'] + 1}).")
             assessed_batch = self.qa_agent.assess(state['current_batch'])
-            # We assume it assesses until it passes internally (like our QA agent does)
-            return {"current_batch": assessed_batch}
+            
+            if self.qa_agent.all_above_threshold(assessed_batch):
+                logger.info("QA Agent: All samples passed confidence threshold.")
+                # Force all to be marked assessed so we can move to train
+                for s in assessed_batch: s.is_assessed = True
+            
+            return {"current_batch": assessed_batch, "qa_attempts": state["qa_attempts"] + 1}
 
         def train_node(state: PipelineState) -> Dict:
+            logger.info("Supervisor -> Trainer Agent: Retraining Model.")
             new_labelled = state['labelled_pool'] + state['current_batch']
             logger.info(f"Labelled pool now contains {len(new_labelled)} samples.")
             
             target_reached, metrics = self.trainer.train_and_evaluate(new_labelled)
+            # Clear batch so supervisor starts over
             return {
                 "labelled_pool": new_labelled, 
                 "target_reached": target_reached,
-                "iteration": state['iteration'] + 1
+                "current_batch": []
             }
 
-        # Add Nodes
+        # Build Graph
+        workflow.add_node("supervisor", supervisor_node)
         workflow.add_node("select_data", select_data_node)
         workflow.add_node("annotate", annotate_node)
         workflow.add_node("qa", qa_node)
         workflow.add_node("train", train_node)
 
-        # Define Edges
-        workflow.set_entry_point("select_data")
-        workflow.add_edge("select_data", "annotate")
-        workflow.add_edge("annotate", "qa")
-        workflow.add_edge("qa", "train")
+        # Star Architecture: Everything routes through Supervisor
+        workflow.set_entry_point("supervisor")
+        
+        # Define hierarchical conditional router
+        def router(state: PipelineState):
+            if state["next_agent"] == "END": return END
+            return state["next_agent"]
 
-        # Define Conditional Logic
-        def should_continue(state: PipelineState) -> str:
-            if state["target_reached"]:
-                logger.info("LangGraph: Active Learning Pipeline Completed Successfully!")
-                return END
-            if state["iteration"] >= state["max_iterations"] or not state["unlabelled_pool"]:
-                logger.info("LangGraph: Max iterations reached or pool exhausted.")
-                return END
-            return "select_data"
-
-        workflow.add_conditional_edges("train", should_continue)
+        workflow.add_conditional_edges("supervisor", router)
+        
+        # All workers report back to the supervisor
+        workflow.add_edge("select_data", "supervisor")
+        workflow.add_edge("annotate", "supervisor")
+        workflow.add_edge("qa", "supervisor")
+        workflow.add_edge("train", "supervisor")
         
         return workflow.compile()
 
@@ -114,13 +155,15 @@ class Coordinator:
             iteration=0,
             target_reached=False,
             batch_size=batch_size,
-            max_iterations=max_iterations
+            max_iterations=max_iterations,
+            next_agent="select_data",
+            qa_attempts=0
         )
         
-        # Execute the LangGraph workflow
+        logger.info("Initializing Agentic Hierarchy: Supervisor online.")
         final_state = self.workflow.invoke(initial_state)
         
-        # Sync state back to class for external access
+        # Sync state
         self.unlabelled_pool = final_state["unlabelled_pool"]
         self.labelled_pool = final_state["labelled_pool"]
         

@@ -1,31 +1,46 @@
-# Multi-Agent Autonomous Data Annotation & Active Learning Pipeline
+# Enterprise Multi-Agent Autonomous Data Annotation Pipeline
 
-This module represents a production-grade, multi-agent AI system designed to autonomously annotate raw text data, train Machine Learning classifiers, and iterate to improve quality.
+## 🚀 Architectural Overview
+This pipeline represents a state-of-the-art **Agentic AI Architecture** built entirely on the official **LangChain** and **LangGraph** frameworks. It operates as a local, fully autonomous data engine designed to ingest raw data, evaluate it, and train machine learning models iteratively.
 
-## Architectural Highlights
+To ensure strict privacy, zero cost, and immunity to API rate limits (429 RESOURCE_EXHAUSTED), this system operates **100% locally** using **Llama 2 via Ollama**.
 
-Unlike static scripts, this pipeline is highly dynamic and built for enterprise evaluation:
+### 🧠 Core Frameworks
+* **Orchestration**: `langgraph` (Hierarchical `StateGraph` routing)
+* **Agent Logic**: `langchain`, `langchain_core` (PromptTemplates & Structured Output Chains)
+* **LLM Engine**: `langchain_ollama` (`llama2:latest`)
+* **Vector Store / RAG**: `langchain_community` (`TFIDFRetriever`)
 
-1. **Live Data Ingestion**: Replaces static datasets with live RSS feed parsing (BBC News, NYT, Al Jazeera), ensuring the system always annotates fresh, unseen data.
-2. **Entropy-Based Active Learning**: The `TrainerAgent` calculates the Shannon Entropy of its predictions on the unlabelled pool. The `AnnotatorAgent` is then fed *only the samples the ML model is most uncertain about*, maximizing token budget efficiency.
-3. **Multi-Model Orchestration**: Simultaneously trains `LogisticRegression`, `RandomForest`, and `KNN` (K-Nearest Neighbors), automatically selecting the superior model based on cross-validated F1-Macro scores.
-4. **Local TF-IDF RAG Search**: To fulfill the conversational knowledge-base requirement without triggering external API rate-limits or firewall blocks, this pipeline uses an ultra-fast, local TF-IDF vectorizer to ground the `ChatAgent` responses, ensuring zero hallucinations.
+---
 
-## The Agents
+## 🤖 The Agentic Hierarchy (LangGraph)
+Unlike standard iterative scripts, this pipeline uses a **Supervisor Agent Pattern** built on LangGraph. 
+A central `Supervisor Node` manages the global `PipelineState` and dynamically delegates execution to specialized worker agents based on real-time conditions.
 
-* **`AnnotatorAgent`**: Leverages Gemini 3.6-flash to structure raw news text into categorized predictions using Pydantic schemas.
-* **`QualityAssessorAgent`**: Acts as a Senior QA reviewer. Re-evaluates any predictions that fall below the 80% confidence threshold.
-* **`TrainerAgent`**: Manages the Sklearn ML pipeline, actively calculating prediction entropy to drive the active learning loop.
-* **`IndexerAgent & ChatAgent`**: Provides a terminal-based Chat interface to query the finalized knowledge base with grounded citations.
+### The Specialized Agents:
+1. **Selection Agent (`select_data`)**: Uses **Shannon Entropy** to evaluate the ML model's confusion matrix, actively pulling the highest-value data from the raw pool (Active Learning).
+2. **Annotator Agent (`annotate`)**: Uses `llama2` to autonomously read, parse, and categorize the raw text, outputting strictly validated Pydantic JSON via LangChain chains.
+3. **Quality Assessor (`qa`)**: Acts as a self-reflection node. It evaluates the Annotator's confidence scores. If confidence falls below 80%, the QA agent forces a re-evaluation chain to ensure dataset purity.
+4. **Trainer Agent (`train`)**: Evaluates classic ML algorithms (`RandomForest`, `LogisticRegression`, `KNN`) against the newly labelled pool, scoring them on Accuracy and F1 metrics.
 
-## How to Run
+---
 
-Ensure your `.env` contains your `GEMINI_API_KEY`.
+## 📚 Agentic Knowledge Base (RAG)
+Once the Active Learning loop hits its target metrics, the labelled dataset is instantly compiled into native LangChain `Document` chunks.
+It utilizes an ultra-fast, in-memory `TFIDFRetriever` to facilitate real-time chat, allowing the user to query the newly synthesized knowledge base natively.
 
-```powershell
-# Activate your virtual environment
-.\venv\Scripts\Activate.ps1
+---
 
-# Run the orchestration loop
-python main.py
-```
+## ⚙️ How to Run
+This repository is pre-configured to run entirely on local hardware.
+
+1. **Prerequisites**: Ensure you have [Ollama](https://ollama.com/) installed and running locally with the `llama2` model (`ollama run llama2`).
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Execute Pipeline**:
+   ```bash
+   python main.py
+   ```
+Watch the terminal as the LangGraph Supervisor coordinates the Llama 2 agents in real-time!

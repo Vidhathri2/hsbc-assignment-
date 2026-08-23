@@ -12,36 +12,39 @@ from src.logger import get_logger
 logger = get_logger("Main")
 
 def main():
-    load_dotenv()
-    
     try:
-        client = get_genai_client()
-        logger.info("GenAI client initialized successfully.")
-    except ValueError as e:
+        # 1. Initialize LangChain LLM Client (Ollama)
+        llm_client = get_genai_client()
+        logger.info("LangChain Local Ollama client initialized successfully.")
+    except Exception as e:
         logger.error(f"Initialization Error: {e}")
-        logger.info("Please create a .env file with GEMINI_API_KEY=your_key")
         return
 
-    # Initialize Agents
+    # 2. Fetch Unlabelled Data Pool
+    unlabelled_data = get_mock_dataset()
+    if not unlabelled_data:
+        logger.error("Failed to fetch dataset. Exiting.")
+        return
+
+    # 3. Initialize Agentic Workers
     # Token budget for Annotator
-    annotator = AnnotatorAgent(client=client, token_budget=10000)
+    annotator = AnnotatorAgent(llm=llm_client, token_budget=10000)
     
     # QA Agent with confidence threshold 0.8
-    qa_agent = QualityAssessorAgent(client=client, confidence_threshold=0.8)
+    qa_agent = QualityAssessorAgent(llm=llm_client, confidence_threshold=0.8)
     
-    # Trainer Agent targeting 85% accuracy (or f1)
+    # Trainer Agent targeting 85% accuracy
     trainer = TrainerAgent(target_accuracy=0.85)
 
-    # Initialize Coordinator
+    # 4. Initialize the Hierarchical Multi-Agent Supervisor (Coordinator)
     coordinator = Coordinator(annotator, qa_agent, trainer)
 
     # Load initial unlabelled dataset
-    unlabelled_data = get_mock_dataset()
     coordinator.load_data(unlabelled_data)
 
-    # Run the Multi-Agent Pipeline
-    logger.info("Starting Multi-Agent Autonomous Data Annotation Pipeline...")
-    best_model, labelled_data = coordinator.run_pipeline(batch_size=5, max_iterations=10)
+    # Run the Hierarchical LangGraph Pipeline
+    logger.info("Starting Hierarchical Multi-Agent Data Annotation Pipeline...")
+    best_model, labelled_data = coordinator.run_pipeline(batch_size=2, max_iterations=10)
 
     logger.info(f"Pipeline finished. Total Labelled Samples: {len(labelled_data)}")
     
@@ -52,10 +55,10 @@ def main():
         from src.agents.indexer import IndexerAgent
         from src.agents.chat import ChatAgent
         
-        indexer = IndexerAgent(client=client)
+        indexer = IndexerAgent(client=llm_client)
         indexer.summarize_and_index(labelled_data)
         
-        chat_agent = ChatAgent(client=client, indexer=indexer)
+        chat_agent = ChatAgent(llm=llm_client, indexer=indexer)
         
         logger.info("\n--- Commencing Chat Test ---")
         test_queries = [

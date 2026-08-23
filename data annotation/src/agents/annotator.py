@@ -3,18 +3,25 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+from langchain_core.prompts import PromptTemplate
 from src.schema import Sample, BatchAnnotationResult
-from src.llm import generate_structured_response
 from src.logger import get_logger
 
 logger = get_logger("AnnotatorAgent")
 
 class AnnotatorAgent:
-    def __init__(self, client, token_budget: int = 50000):
-        self.client = client
+    def __init__(self, llm, token_budget: int = 50000):
+        self.llm = llm.with_structured_output(BatchAnnotationResult)
         self.token_budget = token_budget
         self.tokens_used = 0
         self.vectorizer = TfidfVectorizer(stop_words='english')
+        
+        self.prompt_template = PromptTemplate.from_template(
+            "You are an expert data annotator. Please classify the following news articles into appropriate categories "
+            "(e.g., Politics, Sports, Technology, Business, Entertainment, Health, Science).\n"
+            "Provide the predicted label and a confidence score between 0.0 and 1.0 for each article.\n\n"
+            "{articles_text}"
+        )
 
     def select_samples(self, unlabelled_pool: List[Sample], labelled_pool: List[Sample], batch_size: int = 5) -> List[Sample]:
         if not labelled_pool or not unlabelled_pool:
@@ -39,18 +46,14 @@ class AnnotatorAgent:
             logger.warning("Token budget exhausted. Cannot annotate more samples.")
             return samples
 
-        prompt = (
-            "You are an expert data annotator. Please classify the following news articles into appropriate categories "
-            "(e.g., Politics, Sports, Technology, Business, Entertainment, Health, Science).\n"
-            "Provide the predicted label and a confidence score between 0.0 and 1.0 for each article.\n\n"
-        )
-        
+        articles_text = ""
         for i, sample in enumerate(samples):
-            prompt += f"Article {i+1}:\n{sample.text}\n\n"
+            articles_text += f"Article {i+1}:\n{sample.text}\n\n"
 
-        logger.info(f"Annotating {len(samples)} samples...")
+        logger.info(f"Annotating {len(samples)} samples via LangChain Ollama...")
         try:
-            result = generate_structured_response(self.client, prompt, BatchAnnotationResult)
+            chain = self.prompt_template | self.llm
+            result = chain.invoke({"articles_text": articles_text})
             
             for i, ann in enumerate(result.results):
                 if i < len(samples):
@@ -58,7 +61,7 @@ class AnnotatorAgent:
                     samples[i].confidence = ann.confidence
                     samples[i].is_assessed = False
             
-            self.tokens_used += len(prompt) // 4 + 100
+            self.tokens_used += len(articles_text) // 4 + 100
             
         except Exception as e:
             logger.error(f"Error during annotation: {e}")

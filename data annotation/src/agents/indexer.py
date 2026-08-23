@@ -1,7 +1,6 @@
 from typing import List
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+from langchain_core.documents import Document
+from langchain_community.retrievers import TFIDFRetriever
 
 from src.schema import Sample
 from src.logger import get_logger
@@ -11,36 +10,33 @@ logger = get_logger("IndexerAgent")
 class IndexerAgent:
     def __init__(self, client):
         self.client = client
-        self.documents = []
-        self.vectorizer = TfidfVectorizer(stop_words='english')
-        self.tfidf_matrix = None
+        self.documents: List[Document] = []
+        self.retriever = None
         
     def summarize_and_index(self, samples: List[Sample]):
-        logger.info(f"Indexing {len(samples)} samples locally...")
+        logger.info(f"Indexing {len(samples)} samples via LangChain Document storage...")
         
         for sample in samples:
-            # We skip the LLM summarization to avoid hitting Gemini API Rate Limits (429 errors).
-            # The RAG search will just use the raw text, which is actually more accurate!
             sample.summary = "Extracted from full text."
             
-            # Store document locally
-            document_content = f"Source: {sample.source}\nLabel: {sample.label}\nFull Text: {sample.text}"
-            self.documents.append(document_content)
+            # Create LangChain Document
+            doc = Document(
+                page_content=f"Source: {sample.source}\nLabel: {sample.label}\nFull Text: {sample.text}",
+                metadata={"id": sample.id, "label": sample.label, "source": sample.source}
+            )
+            self.documents.append(doc)
             
-        # Build TF-IDF index for ultra-fast local search
+        # Build LangChain TF-IDF Retriever
         if self.documents:
-            self.tfidf_matrix = self.vectorizer.fit_transform(self.documents)
+            self.retriever = TFIDFRetriever.from_documents(self.documents)
                 
-        logger.info(f"Successfully indexed {len(samples)} samples locally.")
+        logger.info(f"Successfully indexed {len(samples)} LangChain Documents.")
 
     def search(self, query: str, top_k: int = 3) -> List[str]:
-        if not self.documents or self.tfidf_matrix is None:
+        if not self.retriever:
             return []
             
-        query_vec = self.vectorizer.transform([query])
-        sims = cosine_similarity(query_vec, self.tfidf_matrix)[0]
-        top_indices = np.argsort(sims)[-top_k:][::-1]
+        self.retriever.k = top_k
+        docs = self.retriever.invoke(query)
         
-        # Only return if there is some non-zero similarity
-        results = [self.documents[i] for i in top_indices if sims[i] > 0.0]
-        return results
+        return [doc.page_content for doc in docs]

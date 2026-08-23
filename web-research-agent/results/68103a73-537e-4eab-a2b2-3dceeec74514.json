@@ -1,0 +1,211 @@
+{
+  "report_id": "68103a73-537e-4eab-a2b2-3dceeec74514",
+  "topic": "Machine Learning in Healthcare 78",
+  "summary": "An executive summary of Machine Learning in Healthcare 78. The research covers 4 main aspects. The overall findings indicate a strong correlation between the sub-topics, synthesized from 20 sources.",
+  "sections": [
+    {
+      "heading": "Analysis of Machine Learning in Healthcare 78 aspect 1",
+      "content": "This section resolves conflicting information and synthesizes details about Machine Learning in Healthcare 78 aspect 1. The consensus is that it is a vital aspect of Machine Learning in Healthcare 78.",
+      "citations": [
+        "2f2cfedf-7415-4eeb-a3a6-113b82ed0fc0",
+        "d1e7cf60-97ee-4349-8215-c76b5143228d",
+        "9215633e-8d9a-4f21-9fa8-3a37b2c33c48",
+        "b705212c-ac2d-49a9-ac2e-73636e5abed4",
+        "012013a0-6911-426c-b29d-003f8572658f"
+      ]
+    },
+    {
+      "heading": "Analysis of Machine Learning in Healthcare 78 aspect 2",
+      "content": "This section resolves conflicting information and synthesizes details about Machine Learning in Healthcare 78 aspect 2. The consensus is that it is a vital aspect of Machine Learning in Healthcare 78.",
+      "citations": [
+        "2c74da81-82ca-4841-b513-432daecc6341",
+        "e871f1f4-45bf-40cd-ac54-facf080f9e4b",
+        "de463eee-8786-48d9-b0f2-de47fea42ade",
+        "aa8ba28e-3fec-4a89-b13d-3e49ebf89a78",
+        "11e1946f-8606-46a1-a512-939f853906df"
+      ]
+    },
+    {
+      "heading": "Analysis of Machine Learning in Healthcare 78 aspect 3",
+      "content": "This section resolves conflicting information and synthesizes details about Machine Learning in Healthcare 78 aspect 3. The consensus is that it is a vital aspect of Machine Learning in Healthcare 78.",
+      "citations": [
+        "07008873-06e7-4535-808f-6da2699fcad2",
+        "3f739f03-efb6-4134-9757-9046f40a3c63",
+        "8ac4a702-0d00-47d9-a137-04301e6916bc",
+        "61e13ed2-61cc-4791-9513-290f2825ff79",
+        "3d73d21e-918a-496c-862e-04838a61c209"
+      ]
+    },
+    {
+      "heading": "Analysis of Missing detailed coverage on sub-topic implications.",
+      "content": "This section resolves conflicting information and synthesizes details about Missing detailed coverage on sub-topic implications.. The consensus is that it is a vital aspect of Machine Learning in Healthcare 78.",
+      "citations": [
+        "976da2af-fe1b-4bc7-b76f-de77208b04f9",
+        "e39435cd-9d0a-4949-b620-001a8a2125cc",
+        "fd88aa4f-24e9-4b5f-81a4-601f23e4d05a",
+        "c064e9fb-3c75-46f9-96d8-6c81105bbcda",
+        "3b468620-8710-4aa1-bfb3-9fbb493f2d70"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "2f2cfedf-7415-4eeb-a3a6-113b82ed0fc0",
+      "url": "https://mock-dataset.com/article_4b593c4f",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 1 part 1",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-21T18:23:09.429779"
+    },
+    {
+      "source_id": "d1e7cf60-97ee-4349-8215-c76b5143228d",
+      "url": "https://mock-dataset.com/article_6cc64afa",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 1 part 2",
+      "relevance_score": 0.9,
+      "scraped_at": "2026-08-21T18:23:09.429834"
+    },
+    {
+      "source_id": "9215633e-8d9a-4f21-9fa8-3a37b2c33c48",
+      "url": "https://mock-dataset.com/article_0e1eadf5",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 1 part 3",
+      "relevance_score": 0.8,
+      "scraped_at": "2026-08-21T18:23:09.429854"
+    },
+    {
+      "source_id": "b705212c-ac2d-49a9-ac2e-73636e5abed4",
+      "url": "https://mock-dataset.com/article_5a453f0d",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 1 part 4",
+      "relevance_score": 0.7,
+      "scraped_at": "2026-08-21T18:23:09.429872"
+    },
+    {
+      "source_id": "012013a0-6911-426c-b29d-003f8572658f",
+      "url": "https://mock-dataset.com/article_619a09a6",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 1 part 5",
+      "relevance_score": 0.6,
+      "scraped_at": "2026-08-21T18:23:09.429890"
+    },
+    {
+      "source_id": "2c74da81-82ca-4841-b513-432daecc6341",
+      "url": "https://mock-dataset.com/article_f23ffade",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 2 part 1",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-21T18:23:09.735736"
+    },
+    {
+      "source_id": "e871f1f4-45bf-40cd-ac54-facf080f9e4b",
+      "url": "https://mock-dataset.com/article_a8a9d897",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 2 part 2",
+      "relevance_score": 0.9,
+      "scraped_at": "2026-08-21T18:23:09.735759"
+    },
+    {
+      "source_id": "de463eee-8786-48d9-b0f2-de47fea42ade",
+      "url": "https://mock-dataset.com/article_e93da6c2",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 2 part 3",
+      "relevance_score": 0.8,
+      "scraped_at": "2026-08-21T18:23:09.735770"
+    },
+    {
+      "source_id": "aa8ba28e-3fec-4a89-b13d-3e49ebf89a78",
+      "url": "https://mock-dataset.com/article_c6b0a60b",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 2 part 4",
+      "relevance_score": 0.7,
+      "scraped_at": "2026-08-21T18:23:09.735780"
+    },
+    {
+      "source_id": "11e1946f-8606-46a1-a512-939f853906df",
+      "url": "https://mock-dataset.com/article_f7c5b741",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 2 part 5",
+      "relevance_score": 0.6,
+      "scraped_at": "2026-08-21T18:23:09.735789"
+    },
+    {
+      "source_id": "07008873-06e7-4535-808f-6da2699fcad2",
+      "url": "https://mock-dataset.com/article_ebe91a60",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 3 part 1",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-21T18:23:10.039810"
+    },
+    {
+      "source_id": "3f739f03-efb6-4134-9757-9046f40a3c63",
+      "url": "https://mock-dataset.com/article_c39eda2a",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 3 part 2",
+      "relevance_score": 0.9,
+      "scraped_at": "2026-08-21T18:23:10.039828"
+    },
+    {
+      "source_id": "8ac4a702-0d00-47d9-a137-04301e6916bc",
+      "url": "https://mock-dataset.com/article_5675c6c0",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 3 part 3",
+      "relevance_score": 0.8,
+      "scraped_at": "2026-08-21T18:23:10.039837"
+    },
+    {
+      "source_id": "61e13ed2-61cc-4791-9513-290f2825ff79",
+      "url": "https://mock-dataset.com/article_f10b7d1a",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 3 part 4",
+      "relevance_score": 0.7,
+      "scraped_at": "2026-08-21T18:23:10.039846"
+    },
+    {
+      "source_id": "3d73d21e-918a-496c-862e-04838a61c209",
+      "url": "https://mock-dataset.com/article_5e87710c",
+      "title": "Article about Machine Learning in Healthcare 78 aspect 3 part 5",
+      "relevance_score": 0.6,
+      "scraped_at": "2026-08-21T18:23:10.039853"
+    },
+    {
+      "source_id": "976da2af-fe1b-4bc7-b76f-de77208b04f9",
+      "url": "https://mock-dataset.com/article_1705829e",
+      "title": "Article about Missing detailed coverage on sub-topic implications. part 1",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-21T18:23:31.103467"
+    },
+    {
+      "source_id": "e39435cd-9d0a-4949-b620-001a8a2125cc",
+      "url": "https://mock-dataset.com/article_e9924e91",
+      "title": "Article about Missing detailed coverage on sub-topic implications. part 2",
+      "relevance_score": 0.9,
+      "scraped_at": "2026-08-21T18:23:31.103546"
+    },
+    {
+      "source_id": "fd88aa4f-24e9-4b5f-81a4-601f23e4d05a",
+      "url": "https://mock-dataset.com/article_153153b1",
+      "title": "Article about Missing detailed coverage on sub-topic implications. part 3",
+      "relevance_score": 0.8,
+      "scraped_at": "2026-08-21T18:23:31.103562"
+    },
+    {
+      "source_id": "c064e9fb-3c75-46f9-96d8-6c81105bbcda",
+      "url": "https://mock-dataset.com/article_27f30c60",
+      "title": "Article about Missing detailed coverage on sub-topic implications. part 4",
+      "relevance_score": 0.7,
+      "scraped_at": "2026-08-21T18:23:31.103575"
+    },
+    {
+      "source_id": "3b468620-8710-4aa1-bfb3-9fbb493f2d70",
+      "url": "https://mock-dataset.com/article_ece19f12",
+      "title": "Article about Missing detailed coverage on sub-topic implications. part 5",
+      "relevance_score": 0.6,
+      "scraped_at": "2026-08-21T18:23:31.103587"
+    }
+  ],
+  "critique": {
+    "confidence_score": 0.85,
+    "gaps": [],
+    "bias_flags": [
+      "Slight reliance on overlapping source material."
+    ]
+  },
+  "metadata": {
+    "total_urls_visited": 20,
+    "agent_interactions": 10,
+    "wall_clock_seconds": 86.09105563163757,
+    "planning_time": 6.4373016357421875e-06,
+    "search_time": 0.4,
+    "scrape_time": 0.8034664154052734,
+    "synthesis_time": 1.0019843578338623,
+    "critique_time": 0.6009588241577148,
+    "research_time": 2.8064160346984863
+  }
+}

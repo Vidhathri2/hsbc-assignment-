@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    mem_limit: 1g
+    cpus: 1
+
+  app:
+    build: .
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    volumes:
+      - ./results:/app/results
+    mem_limit: 3g
+    cpus: 3

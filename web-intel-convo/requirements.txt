@@ -1,0 +1,11 @@
+langchain
+langchain-community
+langchain-google-genai
+chromadb
+beautifulsoup4
+requests
+duckduckgo-search
+schedule
+pydantic
+python-dotenv
+colorama

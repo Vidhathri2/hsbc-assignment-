@@ -1,0 +1,25 @@
+{
+  "report_id": "f64a128d-f119-431e-9d38-09c3e23e24c9",
+  "topic": "hi can i know what is agentic ai",
+  "summary": "Synthesis failed due to API error: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.",
+  "sections": [],
+  "sources": [],
+  "critique": {
+    "confidence_score": 0.85,
+    "gaps": [],
+    "bias_flags": [
+      "Slight reliance on overlapping source material."
+    ]
+  },
+  "metadata": {
+    "total_urls_visited": 0,
+    "agent_interactions": 10,
+    "wall_clock_seconds": 7.002096176147461,
+    "planning_time": 0.5357301235198975,
+    "search_time": 9.501416444778442,
+    "scrape_time": 0.0,
+    "synthesis_time": 0.470304012298584,
+    "critique_time": 0.6014599800109863,
+    "research_time": 11.10891056060791
+  }
+}

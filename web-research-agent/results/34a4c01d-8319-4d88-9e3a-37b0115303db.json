@@ -1,0 +1,25 @@
+{
+  "report_id": "34a4c01d-8319-4d88-9e3a-37b0115303db",
+  "topic": "what is agentic ai",
+  "summary": "Synthesis failed due to API error: 404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.",
+  "sections": [],
+  "sources": [],
+  "critique": {
+    "confidence_score": 0.85,
+    "gaps": [],
+    "bias_flags": [
+      "Slight reliance on overlapping source material."
+    ]
+  },
+  "metadata": {
+    "total_urls_visited": 0,
+    "agent_interactions": 10,
+    "wall_clock_seconds": 6.007866621017456,
+    "planning_time": 1.3017754554748535,
+    "search_time": 4.768890857696533,
+    "scrape_time": 0.0,
+    "synthesis_time": 0.5639011859893799,
+    "critique_time": 0.6074690818786621,
+    "research_time": 7.242036581039429
+  }
+}

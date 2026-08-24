@@ -11,6 +11,12 @@ from src.agents.critic import CriticAgent
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 def main():
     bus = MessageBus(host=os.getenv("REDIS_HOST", "localhost"))
     
@@ -29,34 +35,66 @@ def main():
     for agent in agents:
         agent.start()
 
-    logging.info("All agents started. Submitting 100 research topics...")
-    start_time = time.time()
+    import json
     
-    request_ids = []
-    for i in range(100):
-        req_id = str(uuid.uuid4())
-        request_ids.append(req_id)
-        supervisor.submit_request(req_id, {
-            "topic": f"Machine Learning in Healthcare {i}",
-            "depth": "shallow",
-            "max_sources": 5,
-            "output_format": "json"
-        })
-        time.sleep(0.01) # Stagger submission slightly
-
-    # Wait for completion
+    # Reduce logging spam for interactive mode
+    logging.getLogger().setLevel(logging.WARNING)
+    
+    print("\n" + "="*50)
+    print("WEB RESEARCH AGENT - INTERACTIVE MODE")
+    print("Type your topic to research, or 'quit' to exit.")
+    print("="*50 + "\n")
+    
     while True:
-        completed = len(os.listdir("results")) if os.path.exists("results") else 0
-        logging.info(f"Progress: {completed}/100 completed")
-        if completed >= 100:
-            break
-        time.sleep(2)
-        if time.time() - start_time > 600:
-            logging.error("Global timeout of 10 minutes reached!")
+        try:
+            topic = input("Enter a research topic: ").strip()
+            if topic.lower() in ['exit', 'quit']:
+                break
+            if not topic:
+                continue
+                
+            req_id = str(uuid.uuid4())
+            supervisor.submit_request(req_id, {
+                "topic": topic,
+                "depth": "shallow",
+                "max_sources": 5,
+                "output_format": "json"
+            })
+            
+            print(f"[*] Researching '{topic}'... The agents are now working. Please wait.")
+            
+            # Wait for completion
+            result_file = f"results/{req_id}.json"
+            start_time = time.time()
+            
+            while not os.path.exists(result_file):
+                time.sleep(1)
+                if time.time() - start_time > 300: # 5 min timeout
+                    print("[!] Request timed out!")
+                    break
+                    
+            if os.path.exists(result_file):
+                with open(result_file, 'r') as f:
+                    data = json.load(f)
+                    
+                print("\n" + "="*50)
+                print("FINAL RESEARCH REPORT")
+                print("="*50)
+                print(f"TOPIC: {data.get('topic')}\n")
+                print(f"SUMMARY: {data.get('summary')}\n")
+                
+                print("DETAILED SECTIONS:")
+                for sec in data.get('sections', []):
+                    print(f"\n--- {sec.get('heading')} ---")
+                    print(sec.get('content'))
+                    citations = sec.get('citations', [])
+                    if citations:
+                        print(f"Sources Cited: {len(citations)}")
+                print("="*50 + "\n")
+                
+        except (KeyboardInterrupt, EOFError):
             break
 
-    total_time = time.time() - start_time
-    logging.info(f"Finished 100 topics in {total_time:.2f} seconds.")
     
     for agent in agents:
         agent.stop()

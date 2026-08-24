@@ -1,14 +1,19 @@
 import time
 import uuid
-import hashlib
 from datetime import datetime
 from src.agents.base import BaseAgent
 from src.schemas import Message, Source
+try:
+    from ddgs import DDGS
+except ImportError:
+    try:
+        from duckduckgo_search import DDGS
+    except ImportError:
+        DDGS = None
 
 class SearcherAgent(BaseAgent):
     """
-    Executes web searches and handles scraping. 
-    Implements a mock strategy to simulate 10,000 pre-crawled URLs.
+    Executes actual web searches using DuckDuckGo.
     """
     def __init__(self, message_bus):
         super().__init__("searcher", message_bus)
@@ -19,25 +24,25 @@ class SearcherAgent(BaseAgent):
             start_time = time.time()
             
             sub_query = message.payload.get("sub_query")
-            max_sources_per_query = message.payload.get("max_sources", 5)
-            
-            # Apply rate limit jitter
-            time.sleep(0.1)
+            max_sources_per_query = message.payload.get("max_sources", 3)
             
             sources = []
-            for i in range(max_sources_per_query):
-                source_id = str(uuid.uuid4())
-                url_hash = hashlib.md5(f"{sub_query}_{i}".encode()).hexdigest()
-                sources.append({
-                    "source_id": source_id,
-                    "url": f"https://mock-dataset.com/article_{url_hash[:8]}",
-                    "title": f"Article about {sub_query} part {i+1}",
-                    "relevance_score": 0.5 + (0.5 * (1.0 - (i / max_sources_per_query))),
-                    "scraped_at": datetime.utcnow().isoformat()
-                })
-            
-            # Scrape time mock
-            time.sleep(0.2)
+            if DDGS:
+                try:
+                    with DDGS() as ddgs:
+                        results = list(ddgs.text(sub_query, max_results=max_sources_per_query))
+                        for res in results:
+                            source_id = str(uuid.uuid4())
+                            sources.append({
+                                "source_id": source_id,
+                                "url": res.get("href", ""),
+                                "title": res.get("title", ""),
+                                "snippet": res.get("body", ""),
+                                "relevance_score": 1.0,
+                                "scraped_at": datetime.utcnow().isoformat()
+                            })
+                except Exception as e:
+                    self.logger.error(f"Search failed: {e}")
             
             elapsed = time.time() - start_time
             
@@ -48,7 +53,7 @@ class SearcherAgent(BaseAgent):
                 payload={
                     "sub_query": sub_query,
                     "sources": sources,
-                    "search_time": 0.1,
-                    "scrape_time": elapsed - 0.1
+                    "search_time": elapsed,
+                    "scrape_time": 0.0
                 }
             )

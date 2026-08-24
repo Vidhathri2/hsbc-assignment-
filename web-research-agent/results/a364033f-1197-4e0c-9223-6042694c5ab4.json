@@ -1,0 +1,25 @@
+{
+  "report_id": "a364033f-1197-4e0c-9223-6042694c5ab4",
+  "topic": "what is agentic ai",
+  "summary": "Generative AI is not configured.",
+  "sections": [],
+  "sources": [],
+  "critique": {
+    "confidence_score": 0.85,
+    "gaps": [],
+    "bias_flags": [
+      "Slight reliance on overlapping source material."
+    ]
+  },
+  "metadata": {
+    "total_urls_visited": 0,
+    "agent_interactions": 10,
+    "wall_clock_seconds": 6.005508899688721,
+    "planning_time": 4.0531158447265625e-06,
+    "search_time": 7.177554607391357,
+    "scrape_time": 0.0,
+    "synthesis_time": 5.0067901611328125e-06,
+    "critique_time": 0.6021583080291748,
+    "research_time": 7.779721975326538
+  }
+}

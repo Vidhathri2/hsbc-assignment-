@@ -1,0 +1,25 @@
+{
+  "report_id": "8d3b08de-eb2d-45ba-829e-c7364a688a98",
+  "topic": "what is agentic ai",
+  "summary": "Synthesis failed due to API error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 50.450508551s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 50\n}\n]",
+  "sections": [],
+  "sources": [],
+  "critique": {
+    "confidence_score": 0.85,
+    "gaps": [],
+    "bias_flags": [
+      "Slight reliance on overlapping source material."
+    ]
+  },
+  "metadata": {
+    "total_urls_visited": 0,
+    "agent_interactions": 10,
+    "wall_clock_seconds": 9.216832876205444,
+    "planning_time": 1.6892027854919434,
+    "search_time": 2.4389872550964355,
+    "scrape_time": 0.0,
+    "synthesis_time": 5.0352442264556885,
+    "critique_time": 0.6147029399871826,
+    "research_time": 9.77813720703125
+  }
+}

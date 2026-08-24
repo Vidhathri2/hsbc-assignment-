@@ -1,0 +1,61 @@
+{
+  "report_id": "2aecf131-497d-4e04-a368-41091fe4fc76",
+  "topic": "what is machine learni9ng",
+  "summary": "Synthesis failed due to API error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 46.56263082s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-3.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 46\n}\n]",
+  "sections": [],
+  "sources": [
+    {
+      "source_id": "c196b501-1cb4-433b-b4ad-bba592e6715a",
+      "url": "https://en.wikipedia.org/wiki/Machine",
+      "title": "Machine - Wikipedia",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-24T11:45:08.374426"
+    },
+    {
+      "source_id": "4550789b-78a3-4e68-8f60-718efdacd484",
+      "url": "https://www.machinejunction.in/",
+      "title": "MachineJunction \u2014 India's Marketplace for Used Industrial Mac\u2026",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-24T11:45:08.374465"
+    },
+    {
+      "source_id": "583b4bec-b492-41a5-a980-023ae04569e7",
+      "url": "https://oldmachine.in/second-hand-machinery",
+      "title": "Second hand machinery for sale in India",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-24T11:45:08.374474"
+    },
+    {
+      "source_id": "1a2a5ca2-256c-4c0d-a0f6-0932276623de",
+      "url": "https://mechlesson.com/machine/",
+      "title": "What Is A Machine? Its Types and How it Works - Mech Lesson",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-24T11:45:08.374481"
+    },
+    {
+      "source_id": "12f7d615-4622-4f6c-b764-3d711b4f6e25",
+      "url": "https://www.flipkart.com/sewing-machines/pr?sid=j9e,abm,0zg",
+      "title": "Buy Latest Sewing Machines Online at Best Prices in India | Flipkart",
+      "relevance_score": 1.0,
+      "scraped_at": "2026-08-24T11:45:08.374488"
+    }
+  ],
+  "critique": {
+    "confidence_score": 0.85,
+    "gaps": [],
+    "bias_flags": [
+      "Slight reliance on overlapping source material."
+    ]
+  },
+  "metadata": {
+    "total_urls_visited": 5,
+    "agent_interactions": 10,
+    "wall_clock_seconds": 10.047364950180054,
+    "planning_time": 2.8428726196289062,
+    "search_time": 2.157827854156494,
+    "scrape_time": 0.0,
+    "synthesis_time": 5.026564359664917,
+    "critique_time": 0.6060831546783447,
+    "research_time": 10.633347988128662
+  }
+}

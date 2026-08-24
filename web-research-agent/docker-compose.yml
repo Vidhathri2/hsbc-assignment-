@@ -13,9 +13,12 @@ services:
     build: .
     environment:
       - REDIS_HOST=redis
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
       - redis
     volumes:
       - ./results:/app/results
     mem_limit: 3g
     cpus: 3
+    tty: true
+    stdin_open: true

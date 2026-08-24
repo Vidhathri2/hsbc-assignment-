@@ -13,11 +13,12 @@ logger = get_logger("Main")
 
 def main():
     try:
-        # 1. Initialize LangChain LLM Client (Ollama)
+        # 1. Initialize LangChain LLM Client (Gemini API)
         llm_client = get_genai_client()
-        logger.info("LangChain Local Ollama client initialized successfully.")
-    except Exception as e:
+        logger.info("LangChain Gemini client initialized successfully.")
+    except ValueError as e:
         logger.error(f"Initialization Error: {e}")
+        logger.info("Please create a .env file with GEMINI_API_KEY=your_key")
         return
 
     # 2. Fetch Unlabelled Data Pool

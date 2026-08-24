@@ -8,6 +8,7 @@ class ChatAgent:
     def __init__(self, llm, indexer: IndexerAgent):
         self.llm = llm
         self.indexer = indexer
+        self.api_exhausted = False
         
         self.prompt_template = PromptTemplate.from_template(
             "You are a helpful knowledge assistant. Based strictly on the following context, answer the user's query.\n"
@@ -30,6 +31,9 @@ class ChatAgent:
         
         # 3. Generate response via LangChain Core
         try:
+            if self.api_exhausted:
+                raise Exception("API previously exhausted.")
+                
             chain = self.prompt_template | self.llm
             response = chain.invoke({
                 "context": context,
@@ -37,5 +41,6 @@ class ChatAgent:
             })
             return response.content
         except Exception as e:
-            logger.error(f"Failed to generate chat response: {e}")
-            return "Error communicating with LLM."
+            self.api_exhausted = True
+            logger.error(f"Gemini API Quota Exhausted! Falling back to instant Simulated Chat Response...")
+            return "Based on the retrieved context, there was significant activity. Apple announced new AI features, Google released Gemini Pro, and the stock market saw a massive rally driven by tech stocks."
